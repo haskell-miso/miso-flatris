@@ -2,11 +2,10 @@ module Action where
 
 import Miso
 import Miso.String (MisoString)
-import qualified Miso.String as S
 
 data Action
   = Init
-  | Load String
+  | Load MisoString
   | Start
   | Pause
   | Resume

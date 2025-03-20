@@ -24,12 +24,11 @@ main = do
   t <- now
   gen <- getStdGen
   let (tetro, nGen) = random gen
-  let seed = fst . random $ nGen :: Int
-  let m = initialModel {time = t, nextTetro = tetro, randSeed = seed}
-  startApp App {model = m, initialAction = Init, ..}
-  where
-    update = updateModel -- update function
-    view = viewModel -- view function
-    events = defaultEvents -- default delegated events
-    subs = [arrowsSub GetArrows] -- empty subscription list
-    mountPoint = Nothing
+      seed = fst . random $ nGen :: Int
+      model = initialModel {time = t, nextTetro = tetro, randSeed = seed}
+  startApp (defaultApp model updateModel viewModel)
+    { initialAction = Just Init
+    , subs = [arrowsSub GetArrows]
+    , logLevel = DebugAll
+    , events = defaultEvents <> mouseEvents
+    } 

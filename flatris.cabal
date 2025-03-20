@@ -1,11 +1,11 @@
+cabal-version:       2.2
 name:                flatris
 version:             0.1.0.0
 synopsis:            An implementation of Flatris using Haskell and Miso
 category:            Web
 build-type:          Simple
-license:             BSD3
+license:             BSD-3-Clause
 license-file:        LICENSE
-cabal-version:       >=1.10
 
 executable app
   hs-source-dirs:      src
