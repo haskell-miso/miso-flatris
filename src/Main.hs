@@ -1,4 +1,5 @@
 -- | Haskell language pragma
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -17,6 +18,10 @@ import Action
 import Model
 import Update
 import View
+
+#ifdef WASM
+foreign export javascript "hs_start" main :: IO ()
+#endif
 
 -- | Entry point for a miso application
 main :: IO ()
