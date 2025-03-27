@@ -5,6 +5,7 @@
 
 module Update where
 
+import Control.Monad.State hiding (state)
 import Control.Arrow
 import Data.Aeson
 import Data.Function
@@ -20,44 +21,56 @@ import Model
 import Tetromino
 
 -- | Updates model, optionally introduces side effects
-updateModel :: Action -> Model -> Effect Action Model
-updateModel Resume model@Model {..} =
-  noEff model {state = Playing, fall = newFall}
-  where
-    newFall = fall {isActive = True}
-updateModel Start model@Model {..} = noEff newModel
-  where
-    (newNext, newSeed) = randomTetro randSeed
-    newFall = defaultFall {isActive = True}
-    newModel =
-      initialModel
-      {state = Playing, fall = newFall, randSeed = newSeed, nextTetro = newNext} &
-      spawnTetromino
-updateModel Pause model@Model {..} =
-  noEff model {state = Paused, fall = newFall}
-  where
-    newFall = fall {isActive = False}
-updateModel Rotate model@Model {..} = noEff model {rotation = newRotation}
-  where
-    newRotation = rotation {isActive = True}
-updateModel MoveLeft model@Model {..} =
-  noEff model {movement = newMovement, arrows = newArrows}
-  where
-    newMovement = movement {isActive = True}
-    newArrows = (\(x, y) -> (-1, y)) arrows
-updateModel MoveRight model@Model {..} =
-  noEff model {movement = newMovement, arrows = newArrows}
-  where
-    newMovement = movement {isActive = True}
-    newArrows = (\(x, y) -> (1, y)) arrows
-updateModel (Time newTime) model = step newModel
-  where
-    newModel = model {delta = newTime - time model, time = newTime}
-updateModel (GetArrows arr@Arrows {..}) model@Model {..} = noEff newModel
-  where
-    newModel = model {arrows = (arrowX, arrowY)} & checkArrows
-updateModel Init model@Model {..} = model <# (Time <$> now)
-updateModel _ model@Model {..} = noEff model
+updateModel
+  :: Action
+  -> Effect Model Action ()
+updateModel Resume = do
+  modify $ \model -> model
+    { state = Playing
+    , fall = (fall model) { isActive = True }
+    }
+updateModel Start = do
+  (newNext, newSeed) <- randomTetro . randSeed <$> get
+  put $ initialModel
+    { state = Playing
+    , fall = defaultFall { isActive = True }
+    , randSeed = newSeed
+    , nextTetro = newNext
+    } & spawnTetromino
+updateModel Pause = do
+  modify $ \model -> model
+    { state = Paused
+    , fall = (fall model) { isActive = False }
+    }
+updateModel Rotate = do
+  modify $ \model -> model
+    { rotation = (rotation model)
+      { isActive = True
+      }
+    }
+updateModel MoveLeft = do
+  modify $ \model -> model
+    { movement = (movement model) { isActive = True }
+    , arrows = (\(x, y) -> (-1, y)) (arrows model)
+    }
+updateModel MoveRight = do
+  modify $ \model -> model
+    { movement = (movement model) { isActive = True }
+    , arrows = (\(x, y) -> (1, y)) (arrows model)
+    }
+updateModel (Time newTime) = do
+  m <- get
+  step m
+    { delta = newTime - time m
+    , time = newTime
+    }
+updateModel (GetArrows Arrows {..}) = do
+  modify $ \m ->
+    m { arrows = (arrowX, arrowY)
+      } & checkArrows
+updateModel Init =
+  scheduleIO (Time <$> now)
+updateModel _ = pure ()
 
 checkArrows :: Model -> Model
 checkArrows model@Model {..} =
@@ -84,7 +97,7 @@ checkDrop model@Model {..} = model {fall = newFall}
         else 800
     newFall = fall {delay = newDelay}
 
-step :: Model -> Effect Action Model
+step :: Model -> Effect Model Action ()
 step model@Model {..} = k <# (Time <$> now)
   where
     k = shouldStep model
@@ -159,11 +172,13 @@ dropTetromino model@Model {..} =
 drop_ :: Model -> Model
 drop_ model@Model {..} =
   if collide width height x y_ (activeGrid active color) grid
-    then model
-         {grid = stamp x y (activeGrid active color) grid, score = score + s} &
-         spawnTetromino &
-         clearLines_
-    else model {y = y_}
+  then
+    model
+    { grid = stamp x y (activeGrid active color) grid
+    , score = score + s
+    } & spawnTetromino & clearLines_
+  else
+    model { y = y_ }
   where
     y_ = y + 1
     s = [4, 8] !! (abs . snd $ arrows)
