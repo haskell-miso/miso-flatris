@@ -23,7 +23,7 @@ import Tetromino
 -- | Updates model, optionally introduces side effects
 updateModel
   :: Action
-  -> Effect Model Action ()
+  -> Effect Model Action
 updateModel Resume = do
   modify $ \model -> model
     { state = Playing
@@ -97,7 +97,7 @@ checkDrop model@Model {..} = model {fall = newFall}
         else 800
     newFall = fall {delay = newDelay}
 
-step :: Model -> Effect Model Action ()
+step :: Model -> Effect Model Action
 step model@Model {..} = k <# (Time <$> now)
   where
     k = shouldStep model
