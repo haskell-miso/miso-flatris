@@ -6,9 +6,10 @@ module View where
 
 import Control.Arrow
 import Data.Aeson.Encode.Pretty
-import qualified Data.Map.Lazy as M
-import Miso
-import Miso.String (MisoString, ms)
+
+import           Miso
+import           Miso.String (MisoString, ms)
+import qualified Miso.Style as CSS
 import qualified Miso.String as S
 
 import Action
@@ -26,7 +27,7 @@ renderSquare ::
 renderSquare (width, height) ((top, left), color) =
   li_
     [ class_ "grid-square-block"
-    , style_ . M.fromList $
+    , CSS.style_
       [ ("top", top)
       , ("left", left)
       , ("width", width)
@@ -36,8 +37,8 @@ renderSquare (width, height) ((top, left), color) =
     ]
     [ div_
         [ class_ "square-block"
-        , style_ . M.fromList $
-          [("background-color", color), ("width", "100%"), ("height", "100%")]
+        , CSS.style_
+          [ ("background-color", color), ("width", "100%"), ("height", "100%") ]
         ]
         []
     ]
@@ -46,7 +47,7 @@ renderTetromino :: [[Int]] -> MisoString -> View Action
 renderTetromino shape color =
   ul_
     [ class_ "tetromino"
-    , style_ . M.fromList $
+    , CSS.style_
       [ ("margin", "0")
       , ("padding", "0")
       , ("list-style-type", "none")
@@ -64,7 +65,7 @@ renderNext :: Model -> View Action
 renderNext model@Model {..} =
   div_
     [ class_ "next-tetromino"
-    , style_ . M.fromList $
+    , CSS.style_
       [ ("padding", "0px")
       , ("margin-top", "8px")
       , ("overflow", "hidden")
@@ -79,7 +80,7 @@ renderActive :: Model -> View Action
 renderActive model@Model {..} =
   div_
     [ class_ "active-tetromino"
-    , style_ . M.fromList $
+    , CSS.style_
       [ ("top", conv (5 * y))
       , ("left", conv (10 * x))
       , ("width", "40%")
@@ -95,7 +96,7 @@ renderGrid :: Model -> View Action
 renderGrid model@Model {..} =
   ul_
     [ class_ "well-grid"
-    , style_ . M.fromList $
+    , CSS.style_
       [ ("position", "relative")
       , ("width", "100%")
       , ("height", "100%")
@@ -114,7 +115,7 @@ renderWell :: Model -> View Action
 renderWell model =
   div_
     [ class_ "well-container"
-    , style_ . M.fromList $
+    , CSS.style_
       [ ("position", "absolute")
       , ("top", "0")
       , ("left", "0")
@@ -128,7 +129,7 @@ renderWell model =
     ]
     [ div_
         [ class_ "well"
-        , style_ . M.fromList $
+        , CSS.style_
           [ ("position", "relative")
           , ("width", "100%")
           , ("height", "100%")
@@ -142,7 +143,7 @@ renderWell model =
 renderControlButton :: MisoString -> Action -> View Action
 renderControlButton txt act =
   div_
-    [ style_ . M.fromList $
+    [ CSS.style_
       [ ("background", "#ecf0f1")
       , ("border", "0")
       , ("color", "#34495f")
@@ -169,7 +170,7 @@ renderControls :: View Action
 renderControls =
   div_
     [ class_ "controls"
-    , style_ . M.fromList $
+    , CSS.style_
       [ ("height", "8%")
       , ("left", "0")
       , ("position", "absolute")
@@ -185,7 +186,7 @@ renderControls =
 renderTitle :: MisoString -> View Action
 renderTitle title =
   div_
-    [ style_ . M.fromList $
+    [ CSS.style_
       [ ("color", "#34495f")
       , ("font-size", "40px")
       , ("line-height", "60px")
@@ -197,7 +198,7 @@ renderTitle title =
 renderLabel :: MisoString -> View Action
 renderLabel label =
   div_
-    [ style_ . M.fromList $
+    [ CSS.style_
       [ ("color", "#bdc3c7")
       , ("font-weight", "300")
       , ("line-height", "1")
@@ -209,7 +210,7 @@ renderLabel label =
 renderCount :: Int -> View Action
 renderCount count =
   div_
-    [ style_ . M.fromList $
+    [ CSS.style_
       [ ("color", "#3993d0")
       , ("font-size", "30px")
       , ("line-height", "1")
@@ -227,7 +228,7 @@ renderGameButton state =
           Stopped -> ("New Game", Start)
   in button_
        [ onClick action
-       , style_ . M.fromList $
+       , CSS.style_
          [ ("background", "#34495f")
          , ("border", "0")
          , ("bottom", "30px")
@@ -252,7 +253,7 @@ renderPanel :: Model -> View Action
 renderPanel model@Model {..} =
   div_
     [ class_ "game-panel-container"
-    , style_ . M.fromList $
+    , CSS.style_
       [ ("bottom", "80px")
       , ("color", "#34495f")
       , ("font-family", "Helvetica, Arial, sans-serif")
@@ -272,8 +273,7 @@ renderPanel model@Model {..} =
     , renderLabel "Next Shape"
     , div_
         [ class_ "next"
-        , style_ . M.fromList $
-          [("margin-top", "10px"), ("position", "relative")]
+        , CSS.style_ [ ("margin-top", "10px"), ("position", "relative") ]
         ]
         [renderNext model]
     , renderGameButton state
@@ -283,7 +283,7 @@ renderInfo :: State -> View Action
 renderInfo state =
   div_
     [ class_ "info-panel-container"
-    , style_ . M.fromList $
+    , CSS.style_
       [ ("background", "rgba(236, 240, 241, 0.85)")
       , ("color", "#34495f")
       , ("font-family", "Helvetica, Arial, sans-serif")
@@ -336,11 +336,11 @@ viewModel model =
   div_
     [ onMouseUp UnlockButtons
     , id_ "root"
-    , style_ . M.fromList $ [("padding", "30px 0")]
+    , CSS.style_ [("padding", "30px 0")]
     ]
     [ div_
         [ class_ "game"
-        , style_ . M.fromList . reverse $
+        , CSS.style_
           [ ("height", "680px")
           , ("margin", "auto")
           , ("position", "relative")
@@ -350,7 +350,7 @@ viewModel model =
         [renderView model]
     , div_
         [ class_ "preview"
-        , style_ . M.fromList $
+        , CSS.style_
           [ ("left", "5px")
           , ("top", "30px")
           , ("overflow", "scroll")
