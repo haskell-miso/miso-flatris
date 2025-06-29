@@ -1,6 +1,8 @@
 -- | Haskell language pragma
-{-# LANGUAGE CPP #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE CPP               #-}
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE TypeApplications  #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | Haskell module declaration
@@ -31,7 +33,7 @@ main = do
   let (tetro, nGen) = random gen
       seed = fst . random $ nGen :: Int
       model = initialModel {time = t, nextTetro = tetro, randSeed = seed}
-  startComponent (defaultComponent model updateModel viewModel)
+  startComponent @"flatris" (defaultComponent model updateModel viewModel)
     { initialAction = Just Init
     , subs = [arrowsSub GetArrows]
     , logLevel = DebugAll
