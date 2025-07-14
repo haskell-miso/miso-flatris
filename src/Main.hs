@@ -8,13 +8,10 @@
 -- | Haskell module declaration
 module Main where
 
-import Control.Arrow
-import qualified Data.Map.Lazy as M
 import System.Random
 
 -- | Miso framework import
 import Miso
-import qualified Miso.String as S
 
 import Action
 import Model
@@ -27,7 +24,7 @@ foreign export javascript "hs_start" main :: IO ()
 
 -- | Entry point for a miso application
 main :: IO ()
-main = do
+main = run $ do
   t <- now
   gen <- getStdGen
   let (tetro, nGen) = random gen

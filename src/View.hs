@@ -10,7 +10,6 @@ import Data.Aeson.Encode.Pretty
 import           Miso
 import           Miso.String (MisoString, ms)
 import qualified Miso.Style as CSS
-import qualified Miso.String as S
 
 import Action
 import Grid
@@ -62,7 +61,7 @@ renderTetromino shape color =
     conv' = conv *** conv
 
 renderNext :: Model -> View Action
-renderNext model@Model {..} =
+renderNext Model {..} =
   div_
     [ class_ "next-tetromino"
     , CSS.style_
@@ -77,7 +76,7 @@ renderNext model@Model {..} =
     [flip renderTetromino "#ecf0f1" . tetroShape $ nextTetro]
 
 renderActive :: Model -> View Action
-renderActive model@Model {..} =
+renderActive Model {..} =
   div_
     [ class_ "active-tetromino"
     , CSS.style_
@@ -93,7 +92,7 @@ renderActive model@Model {..} =
     conv = ms . (++ "%") . show
 
 renderGrid :: Model -> View Action
-renderGrid model@Model {..} =
+renderGrid Model {..} =
   ul_
     [ class_ "well-grid"
     , CSS.style_
@@ -109,7 +108,7 @@ renderGrid model@Model {..} =
   where
     conv = ms . (++ "%") . show
     conv' = (conv . (* 5)) *** (conv . (* 10))
-    conv_ c@Cell {..} = (conv' pos, value)
+    conv_ Cell {..} = (conv' pos, value)
 
 renderWell :: Model -> View Action
 renderWell model =

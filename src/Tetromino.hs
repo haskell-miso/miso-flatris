@@ -8,9 +8,7 @@ import Data.Aeson
 import Data.List
 import GHC.Generics
 import Grid
-import Miso
 import Miso.String (MisoString)
-import qualified Miso.String as S
 import System.Random
 
 default (MisoString)
