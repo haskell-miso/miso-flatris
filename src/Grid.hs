@@ -7,7 +7,6 @@ module Grid where
 
 import Control.Arrow
 import Data.Aeson
-import Data.Aeson.Types
 import GHC.Generics
 
 data Cell a = Cell
@@ -21,7 +20,7 @@ fromList :: a -> [(Int, Int)] -> Grid a
 fromList value = map (Cell value)
 
 mapToList :: (a -> (Int, Int) -> b) -> Grid a -> [b]
-mapToList fun = map (\cell@Cell {..} -> fun value pos)
+mapToList fun = map (\Cell {..} -> fun value pos)
 
 emptyGrid :: Grid a
 emptyGrid = []
@@ -46,7 +45,7 @@ partFun :: (a -> Bool) -> [a] -> ([a], [a])
 partFun f lst = (filter f lst, filter (not . f) lst)
 
 fullLine :: Int -> Grid a -> Maybe Int
-fullLine width [] = Nothing
+fullLine _ [] = Nothing
 fullLine width grid@(c:_) =
   if length inline == width
     then Just lineY

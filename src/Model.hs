@@ -4,13 +4,9 @@
 module Model where
 
 import Data.Aeson
-import Data.Aeson.Types
 import GHC.Generics
 import Grid
-import Miso
 import Miso.String (MisoString)
-import qualified Miso.String as S
-import System.Random
 import Tetromino
 
 data Model = Model

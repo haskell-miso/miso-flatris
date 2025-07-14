@@ -6,15 +6,9 @@
 module Update where
 
 import Control.Monad.State hiding (state)
-import Control.Arrow
-import Data.Aeson
 import Data.Function
-import qualified Data.Map.Lazy as M
-import Data.Monoid
 import Grid
 import Miso
-import qualified Miso.String as S
-import System.Random
 
 import Action
 import Model
@@ -51,12 +45,12 @@ updateModel Rotate = do
 updateModel MoveLeft = do
   modify $ \model -> model
     { movement = (movement model) { isActive = True }
-    , arrows = (\(x, y) -> (-1, y)) (arrows model)
+    , arrows = (\(_, y) -> (-1, y)) (arrows model)
     }
 updateModel MoveRight = do
   modify $ \model -> model
     { movement = (movement model) { isActive = True }
-    , arrows = (\(x, y) -> (1, y)) (arrows model)
+    , arrows = (\(_, y) -> (1, y)) (arrows model)
     }
 updateModel (Time newTime) = do
   m <- get
@@ -69,7 +63,7 @@ updateModel (GetArrows Arrows {..}) = do
     m { arrows = (arrowX, arrowY)
       } & checkArrows
 updateModel Init =
-  scheduleIO (Time <$> now)
+  io (Time <$> now)
 updateModel _ = pure ()
 
 checkArrows :: Model -> Model
@@ -98,7 +92,7 @@ checkDrop model@Model {..} = model {fall = newFall}
     newFall = fall {delay = newDelay}
 
 step :: Model -> Effect Model Action
-step model@Model {..} = k <# (Time <$> now)
+step model = k <# (Time <$> now)
   where
     k = shouldStep model
 
