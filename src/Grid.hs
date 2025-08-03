@@ -61,10 +61,10 @@ clearLines width grid =
     Just lineY -> clearLine width lineY grid
 
 clearLine :: Int -> Int -> Grid a -> (Grid a, Int)
-clearLine width lineY grid = (newGrid, lines + 1)
+clearLine width lineY grid = (newGrid, lines_ + 1)
   where
     clearedGrid = filter (\c' -> lineY /= (fst . pos $ c')) grid
     (above, below) = partFun (\c' -> lineY > (fst . pos $ c')) clearedGrid
     droppedAbove =
       map (\c' -> c' {pos = ((+ 1) . fst . pos $ c', snd . pos $ c')}) above
-    (newGrid, lines) = clearLines width (droppedAbove ++ below)
+    (newGrid, lines_) = clearLines width (droppedAbove ++ below)

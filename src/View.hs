@@ -18,17 +18,18 @@ import Tetromino
 
 shapeList :: Char -> [(MisoString, MisoString)]
 shapeList 'Z' = [("0%", "0%"), ("0%", "25%"), ("25%", "25%"), ("25%", "50%")]
+shapeList _ = []
 
 renderSquare ::
      (MisoString, MisoString)
   -> ((MisoString, MisoString), MisoString)
-  -> View Action
-renderSquare (width, height) ((top, left), color) =
+  -> View model Action
+renderSquare (width, height) ((top, left_), color) =
   li_
     [ class_ "grid-square-block"
     , CSS.style_
       [ ("top", top)
-      , ("left", left)
+      , ("left", left_)
       , ("width", width)
       , ("height", height)
       , ("position", "absolute")
@@ -42,7 +43,7 @@ renderSquare (width, height) ((top, left), color) =
         []
     ]
 
-renderTetromino :: [[Int]] -> MisoString -> View Action
+renderTetromino :: [[Int]] -> MisoString -> View model Action
 renderTetromino shape color =
   ul_
     [ class_ "tetromino"
@@ -60,7 +61,7 @@ renderTetromino shape color =
     conv = ms . (++ "%") . show . (* 25)
     conv' = conv *** conv
 
-renderNext :: Model -> View Action
+renderNext :: Model -> View model Action
 renderNext Model {..} =
   div_
     [ class_ "next-tetromino"
@@ -75,7 +76,7 @@ renderNext Model {..} =
     ]
     [flip renderTetromino "#ecf0f1" . tetroShape $ nextTetro]
 
-renderActive :: Model -> View Action
+renderActive :: Model -> View model Action
 renderActive Model {..} =
   div_
     [ class_ "active-tetromino"
@@ -91,7 +92,7 @@ renderActive Model {..} =
   where
     conv = ms . (++ "%") . show
 
-renderGrid :: Model -> View Action
+renderGrid :: Model -> View model Action
 renderGrid Model {..} =
   ul_
     [ class_ "well-grid"
@@ -110,7 +111,7 @@ renderGrid Model {..} =
     conv' = (conv . (* 5)) *** (conv . (* 10))
     conv_ Cell {..} = (conv' pos, value)
 
-renderWell :: Model -> View Action
+renderWell :: Model -> View model Action
 renderWell model =
   div_
     [ class_ "well-container"
@@ -139,7 +140,7 @@ renderWell model =
         [renderGrid model, renderActive model]
     ]
 
-renderControlButton :: MisoString -> Action -> View Action
+renderControlButton :: MisoString -> Action -> View model Action
 renderControlButton txt act =
   div_
     [ CSS.style_
@@ -165,7 +166,7 @@ renderControlButton txt act =
     ]
     [text txt]
 
-renderControls :: View Action
+renderControls :: View model Action
 renderControls =
   div_
     [ class_ "controls"
@@ -182,7 +183,7 @@ renderControls =
     , renderControlButton "↓" Accelerate
     ]
 
-renderTitle :: MisoString -> View Action
+renderTitle :: MisoString -> View model Action
 renderTitle title =
   div_
     [ CSS.style_
@@ -194,7 +195,7 @@ renderTitle title =
     ]
     [text title]
 
-renderLabel :: MisoString -> View Action
+renderLabel :: MisoString -> View model Action
 renderLabel label =
   div_
     [ CSS.style_
@@ -206,7 +207,7 @@ renderLabel label =
     ]
     [text label]
 
-renderCount :: Int -> View Action
+renderCount :: Int -> View model Action
 renderCount count =
   div_
     [ CSS.style_
@@ -218,7 +219,7 @@ renderCount count =
     ]
     [text . ms . show $ count]
 
-renderGameButton :: State -> View Action
+renderGameButton :: State -> View model Action
 renderGameButton state =
   let (txt, action) =
         case state of
@@ -248,7 +249,7 @@ renderGameButton state =
        ]
        [text txt]
 
-renderPanel :: Model -> View Action
+renderPanel :: Model -> View model Action
 renderPanel model@Model {..} =
   div_
     [ class_ "game-panel-container"
@@ -278,7 +279,7 @@ renderPanel model@Model {..} =
     , renderGameButton state
     ]
 
-renderInfo :: State -> View Action
+renderInfo :: State -> View model Action
 renderInfo state =
   div_
     [ class_ "info-panel-container"
@@ -323,14 +324,14 @@ renderInfo state =
         Playing -> "none"
         _ -> "block"
 
-renderView :: Model -> View Action
+renderView :: Model -> View model Action
 renderView model@Model {..} =
   div_
     [class_ "flatris-game"]
     [renderWell model, renderControls, renderPanel model, renderInfo state]
 
 -- | Constructs a virtual DOM from a model
-viewModel :: Model -> View Action
+viewModel :: Model -> View model Action
 viewModel model =
   div_
     [ onMouseUp UnlockButtons

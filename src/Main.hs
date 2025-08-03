@@ -30,7 +30,7 @@ main = run $ do
   let (tetro, nGen) = random gen
       seed = fst . random $ nGen :: Int
       model = initialModel {time = t, nextTetro = tetro, randSeed = seed}
-  startComponent (component model updateModel viewModel)
+  startApp (component model updateModel viewModel)
     { initialAction = Just Init
     , subs = [arrowsSub GetArrows]
     , logLevel = DebugAll

@@ -67,7 +67,7 @@ initialModel =
   }
 
 activeGrid :: [[Int]] -> MisoString -> Grid MisoString
-activeGrid active color = fromList color . shapeToCoord $ active
+activeGrid active_ color_ = fromList color_ . shapeToCoord $ active_
 
 defaultMovement :: AnimationState
 defaultMovement =
