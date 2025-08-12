@@ -204,7 +204,7 @@ clearLines_ model@Model {..} =
     bonus = [0, 100, 300, 500, 800]
 
 checkEndGame :: Model -> Model
-checkEndGame model@Model {..} =
-  if or . mapToList (\_ (y, _) -> y < 0) $ grid
+checkEndGame model =
+  if or . mapToList (\_ (y, _) -> y < 0) $ (grid model)
     then model {state = Stopped}
     else model

@@ -8,7 +8,6 @@ import Control.Arrow
 import Data.Aeson.Encode.Pretty
 
 import           Miso
-import           Miso.String (MisoString, ms)
 import qualified Miso.Style as CSS
 
 import Action

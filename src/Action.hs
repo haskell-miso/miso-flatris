@@ -1,7 +1,6 @@
 module Action where
 
 import Miso
-import Miso.String (MisoString)
 
 data Action
   = Init
