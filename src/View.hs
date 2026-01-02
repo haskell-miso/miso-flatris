@@ -8,7 +8,9 @@ import Control.Arrow
 import Data.Aeson.Encode.Pretty
 
 import           Miso
-import qualified Miso.Style as CSS
+import           Miso.Html
+import           Miso.Html.Property
+import qualified Miso.CSS as CSS
 
 import Action
 import Grid

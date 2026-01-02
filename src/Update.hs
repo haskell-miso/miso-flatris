@@ -8,7 +8,7 @@ module Update where
 import Control.Monad.State hiding (state)
 import Data.Function
 import Grid
-import Miso
+import Miso hiding ((!!))
 
 import Action
 import Model
