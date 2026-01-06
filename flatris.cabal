@@ -23,8 +23,6 @@ executable app
                        miso,
                        mtl,
                        containers,
-                       aeson,
-                       aeson-pretty,
                        random
   default-language:    Haskell2010
   other-modules:       Action

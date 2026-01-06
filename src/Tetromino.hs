@@ -4,11 +4,11 @@
 
 module Tetromino where
 
-import Data.Aeson
 import Data.List
 import GHC.Generics
 import Grid
 import Miso.String (MisoString)
+import Miso.JSON
 import System.Random
 
 default (MisoString)

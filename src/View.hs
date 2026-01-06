@@ -5,11 +5,11 @@
 module View where
 
 import Control.Arrow
-import Data.Aeson.Encode.Pretty
 
 import           Miso
 import           Miso.Html
 import           Miso.Html.Property
+import           Miso.JSON
 import qualified Miso.CSS as CSS
 
 import Action
