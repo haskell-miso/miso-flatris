@@ -3,10 +3,10 @@
 
 module Model where
 
-import Data.Aeson
 import GHC.Generics
 import Grid
 import Miso.String (MisoString)
+import Miso.JSON
 import Tetromino
 
 data Model = Model

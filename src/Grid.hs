@@ -6,8 +6,8 @@
 module Grid where
 
 import Control.Arrow
-import Data.Aeson
 import GHC.Generics
+import Miso.JSON
 
 data Cell a = Cell
   { value :: a
