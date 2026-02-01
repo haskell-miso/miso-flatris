@@ -24,14 +24,14 @@ foreign export javascript "hs_start" main :: IO ()
 
 -- | Entry point for a miso application
 main :: IO ()
-main = run $ do
+main = do
   t <- now
   gen <- getStdGen
   let (tetro, nGen) = random gen
       seed = fst . random $ nGen :: Int
       model = initialModel {time = t, nextTetro = tetro, randSeed = seed}
   startApp (defaultEvents <> mouseEvents) (component model updateModel viewModel)
-    { initialAction = Just Init
+    { mount = Just Init
     , subs = [arrowsSub GetArrows]
     , logLevel = DebugAll
     } 
