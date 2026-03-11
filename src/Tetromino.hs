@@ -1,3 +1,4 @@
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -21,7 +22,17 @@ data Tetromino
   | LShaped
   | SShaped
   | ZShaped
-  deriving (Eq, Generic, FromJSON, ToJSON, Show, Enum, Bounded)
+  deriving (Eq, Generic, Show, Enum, Bounded)
+
+instance ToJSON Tetromino where
+  toJSON = \case
+    IShaped -> toJSON ("I" :: MisoString)
+    OShaped -> toJSON ("O" :: MisoString)
+    TShaped -> toJSON ("T" :: MisoString)
+    JShaped -> toJSON ("J" :: MisoString)
+    LShaped -> toJSON ("L" :: MisoString)
+    SShaped -> toJSON ("S" :: MisoString)
+    ZShaped -> toJSON ("Z" :: MisoString)
 
 instance Random Tetromino where
   randomR (a, b) g =

@@ -1,8 +1,7 @@
-{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveAnyClass #-}
-
+{-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE DeriveAnyClass    #-}
+{-# LANGUAGE DeriveGeneric     #-}
 module Grid where
 
 import Control.Arrow
@@ -12,7 +11,7 @@ import Miso.JSON
 data Cell a = Cell
   { value :: a
   , pos :: (Int, Int)
-  } deriving (Show, Eq, Generic, ToJSON, FromJSON)
+  } deriving (Show, Eq, Generic, ToJSON)
 
 type Grid a = [Cell a]
 

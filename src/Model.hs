@@ -1,5 +1,7 @@
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE DeriveAnyClass    #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Model where
 
@@ -28,20 +30,26 @@ data Model = Model
   , grid :: Grid MisoString
   , nextTetro :: Tetromino
   , randSeed :: Int
-  } deriving (Show, Eq, Generic, ToJSON, FromJSON)
+  } deriving (Show, Eq, Generic, ToJSON)
 
 data AnimationState = AnimationState
   { isAnimated :: Bool -- Whether or not to perform the action
   , isActive :: Bool -- Whether or not it is the currect time to act
   , ticks :: Int
   , delay :: Int
-  } deriving (Show, Eq, Generic, ToJSON, FromJSON)
+  } deriving (Show, Eq, Generic, ToJSON)
 
 data State
   = Paused
   | Playing
   | Stopped
-  deriving (Show, Eq, Generic, ToJSON, FromJSON)
+  deriving (Show, Eq, Generic)
+
+instance ToJSON State where
+  toJSON = \case
+    Paused -> toJSON ("paused" :: MisoString)
+    Playing -> toJSON ("playing" :: MisoString)
+    Stopped -> toJSON ("stopped" :: MisoString)
 
 initialModel :: Model
 initialModel =
