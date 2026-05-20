@@ -1,6 +1,5 @@
 {-# LANGUAGE OverloadedStrings  #-}
 {-# LANGUAGE RecordWildCards    #-}
-{-# LANGUAGE DeriveAnyClass     #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE DerivingStrategies #-}
 module Grid where
@@ -13,7 +12,9 @@ data Cell a = Cell
   { value :: a
   , pos :: (Int, Int)
   } deriving stock (Show, Eq, Generic)
-    deriving anyclass ToJSON
+
+instance ToJSON a => ToJSON (Cell a) where
+  toJSON Cell{..} = object ["value" .= value, "pos" .= pos]
 
 type Grid a = [Cell a]
 
